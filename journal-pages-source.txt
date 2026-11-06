@@ -1,0 +1,101 @@
+===== JOURNAL.JSX =====
+import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import PageIntro from "../components/PageIntro";
+import Heading from "../components/Heading";
+import { articles } from "../data/websiteData";
+
+export default function Journal() {
+  return (
+    <main className="inner-page journal-page">
+      <PageIntro
+        eyebrow="THE DIVINE CARAT JOURNAL"
+        title={<>A collection of thoughts <em>for your journey.</em></>}
+        desc="Take a little time for yourself with reflections, inspiration and gentle reminders."
+      />
+
+      <section className="journal section">
+        <Heading
+          eyebrow="READ AND REFLECT"
+          title={<>Words to keep <em>close to heart.</em></>}
+          desc="Explore thoughts on self-discovery, growth and new beginnings."
+        />
+
+        <div className="journal-grid">
+          {articles.map((article) => (
+            <article key={article.slug}>
+              <div className={`journal-art ${article.style}`}></div>
+
+              <label>{article.category}</label>
+
+              <h3>{article.title}</h3>
+
+              <Link to={`/journal/${article.slug}`}>
+                Read more <ArrowUpRight size={15} />
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+===== JOURNALDETAIL.JSX =====
+
+import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import PageIntro from "../components/PageIntro";
+import { articles } from "../data/websiteData";
+
+export default function JournalDetail() {
+  const { slug } = useParams();
+
+  const article = articles.find((item) => item.slug === slug);
+
+  if (!article) {
+    return (
+      <main className="inner-page">
+        <section className="section">
+          <h2>Journal article not found.</h2>
+          <Link to="/journal">Back to Journal</Link>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="inner-page journal-detail-page">
+      <PageIntro
+        eyebrow={article.category}
+        title={<>{article.title}</>}
+        desc={article.intro}
+      />
+
+      <section className="journal-detail section">
+        <div className="journal-thought-grid">
+          {article.content.map((item, index) => (
+            <article className="journal-thought-tile" key={index}>
+              <span className="thought-number">
+                0{index + 1}
+              </span>
+
+              <div className="thought-decoration">✧</div>
+
+              <h2>{item.heading}</h2>
+
+              <p>{item.text}</p>
+
+              <span className="thought-bottom-symbol">✦</span>
+            </article>
+          ))}
+        </div>
+
+        <Link className="journal-back-link" to="/journal">
+          <ArrowLeft size={16} />
+          Back to Journal
+        </Link>
+      </section>
+    </main>
+  );
+}
