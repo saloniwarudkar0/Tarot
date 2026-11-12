@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
+
 const adminRoutes = require("./routes/adminRoutes");
 const journalRoutes = require("./routes/journalRoutes");
 const tarotRoutes = require("./routes/tarotRoutes");
@@ -14,6 +15,13 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+console.log("Environment Check:", {
+  MONGO_URI: Boolean(process.env.MONGO_URI),
+  JWT_SECRET: Boolean(process.env.JWT_SECRET),
+  ADMIN_EMAIL: Boolean(process.env.ADMIN_EMAIL),
+  ADMIN_PASSWORD_HASH: Boolean(process.env.ADMIN_PASSWORD_HASH)
+});
 
 app.get("/", (req, res) => {
   res.json({
@@ -30,17 +38,13 @@ app.use("/api/about", aboutRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
+// Start server first
+app.listen(PORT, "0.0.0.0", async () => {
+  console.log(`Server running on port ${PORT}`);
+
   try {
     await connectDB();
-
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
   } catch (error) {
-    console.error("Server startup failed:", error.message);
-    process.exit(1);
+    console.error("Database startup error:", error.message);
   }
-};
-
-startServer();
+});
