@@ -1,7 +1,17 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Eye, EyeOff, Lock, Mail, ArrowRight } from "lucide-react";
+import {
+  Sparkles,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  ArrowRight,
+} from "lucide-react";
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -24,7 +34,7 @@ export default function AdminLogin() {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      const response = await fetch(`${API_URL}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,6 +119,7 @@ export default function AdminLogin() {
               autoComplete="current-password"
               required
             />
+
             <button
               type="button"
               className="dc-password-toggle"
